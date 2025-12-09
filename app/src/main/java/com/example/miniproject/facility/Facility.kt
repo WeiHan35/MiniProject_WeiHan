@@ -12,12 +12,14 @@ data class Facility(
     val name: String = "",
 
     // 3. Correct syntax for default value assignment.
-    val number: Int = 0,
+    val maxNum: Int = 0,
 
-    val startTime: Timestamp = Timestamp.now(),
+    val minNum: Int = 0,
 
-    val endTime: Timestamp = Timestamp.now(),
+    val startTime: String = "",
+
+    val endTime: String = "",
 
     // 4. CRITICAL: Add the ownerId to create the relationship with the User.
-    val ownerId: String = ""
+    val description: String = ""
 )
