@@ -1,24 +1,13 @@
 package com.example.miniproject.auth
 
-import android.R.attr.name
 import com.example.miniproject.user.User
 import com.google.firebase.auth.AuthResult
-import com.google.firebase.auth.FirebaseUser
 import com.google.firebase.firestore.toObject
 import kotlinx.coroutines.tasks.await
 
 class AuthRepository{
 
     private val usersCollection = FirebaseManager.firestore.collection("users")
-//    suspend fun signIn(email: String, password: String): AuthResult{
-//        val authResult = FirebaseManager.auth.signInWithEmailAndPassword(email, password).await()
-//        val firebaseUser: FirebaseUser? = authResult.user
-//        if(firebaseUser != null){
-//            val newUser = User(id = firebaseUser.uid, email = email, name = name)
-//            usersCollection.document(firebaseUser.uid).set(newUser).await()
-//        }
-//        return authResult
-//    }
 
     suspend fun signIn(email: String, password: String): AuthResult {
         return FirebaseManager.auth.signInWithEmailAndPassword(email, password).await()
@@ -34,8 +23,10 @@ class AuthRepository{
         if (firebaseUser != null) {
             val newUser = User(
                 id = firebaseUser.uid,
+                displayId = "U-${firebaseUser.uid.take(6).uppercase()}", // Generate a display ID
                 email = email,
-                name = name
+                name = name,
+                role = "user" // Set default role for new users
             )
             // Use the user's UID as the document ID for easy lookup
             usersCollection.document(firebaseUser.uid).set(newUser).await()
@@ -49,11 +40,13 @@ class AuthRepository{
         return documentSnapshot.toObject<User>()
     }
 
+    // Function to get all users, useful for admin panels
+    suspend fun getAllUsers(): List<User> {
+        val querySnapshot = usersCollection.get().await()
+        return querySnapshot.documents.mapNotNull { it.toObject<User>() }
+    }
+
     fun signOut(){
         FirebaseManager.auth.signOut()
     }
 }
-
-    val authRepository = AuthRepository()
-
-

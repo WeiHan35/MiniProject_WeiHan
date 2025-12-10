@@ -9,5 +9,4 @@ data class Equipment(
     val price: Double = 0.0,
     val quantity: Int = 0,
     val facilityID: String = ""
-
 )
