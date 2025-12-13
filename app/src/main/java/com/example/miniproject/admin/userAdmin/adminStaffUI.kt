@@ -27,6 +27,7 @@ fun AdminStaffScreen(
             viewModel.addSearchToHistory(searchText)
             // TODO: Implement actual search logic 
         },
-        onBackClick = { navController.popBackStack() }
+        onBackClick = { navController.popBackStack() },
+        content = { /* TODO: Display search results here */ }
     )
 }

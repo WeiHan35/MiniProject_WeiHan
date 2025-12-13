@@ -1,5 +1,6 @@
 package com.example.miniproject
 
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.navigation.compose.NavHost
@@ -7,6 +8,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.miniproject.admin.AdminScreen
 import com.example.miniproject.admin.bookingAdmin.AdminBookingScreen
+import com.example.miniproject.admin.bookingAdmin.SearchBookingByDateScreen
 import com.example.miniproject.admin.bookingAdmin.SearchBookingByFacilityScreen
 import com.example.miniproject.admin.bookingAdmin.SearchBookingByReservationIdScreen
 import com.example.miniproject.admin.bookingAdmin.SearchBookingByUserScreen
@@ -54,7 +56,19 @@ fun AppNavigation(modifier: Modifier = Modifier) {
             SearchBookingByReservationIdScreen(navController = navController)
         }
 
-        // TODO: Add other navigation destinations here
-        // composable("search_booking_by_date") { ... }
+        composable("search_booking_by_date") {
+            SearchBookingByDateScreen(navController = navController)
+        }
+
+        // Adding missing destinations to prevent crashes
+        composable("facilities_management") {
+            // TODO: Replace with the actual Facilities Management screen
+            Text("Facilities Management Screen")
+        }
+
+        composable("report_generation") {
+            // TODO: Replace with the actual Report Generation screen
+            Text("Report Generation Screen")
+        }
     }
 }
