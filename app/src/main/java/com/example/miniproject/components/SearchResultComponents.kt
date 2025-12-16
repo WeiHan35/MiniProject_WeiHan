@@ -3,6 +3,7 @@ package com.example.miniproject.components
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -89,9 +90,9 @@ private fun SearchResultItem(
         Row(
             modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceBetween
         ) {
             Text(text = item.title)
+            Spacer(modifier = Modifier.weight(1f))
             Row {
                 IconButton(onClick = onEditClick) {
                     Icon(Icons.Default.Build, contentDescription = "Edit")

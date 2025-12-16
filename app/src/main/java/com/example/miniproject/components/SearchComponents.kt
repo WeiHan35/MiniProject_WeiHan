@@ -64,7 +64,7 @@ fun SearchScreen(
     var showHistory by remember { mutableStateOf(false) }
     val focusManager = LocalFocusManager.current
 
-    Box(
+    Column(
         modifier = modifier
             .fillMaxSize()
             .background(
@@ -73,10 +73,21 @@ fun SearchScreen(
                 )
             )
     ) {
+        // Header
+        CenterAlignedTopAppBar(
+            title = { Text(title, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 32.sp) },
+            navigationIcon = {
+                IconButton(onClick = onBackClick) {
+                    Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = Color.White)
+                }
+            },
+            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Transparent),
+            modifier = Modifier.padding(top = 40.dp)
+        )
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
-                .padding(top = 140.dp)
                 .clip(RoundedCornerShape(topStart = 32.dp, topEnd = 32.dp))
                 .background(Color.White)
                 .padding(16.dp)
@@ -138,18 +149,6 @@ fun SearchScreen(
                 content()
             }
         }
-
-        // Header
-        CenterAlignedTopAppBar(
-            title = { Text(title, color = Color.White, fontWeight = FontWeight.Bold, fontSize = 32.sp) },
-            navigationIcon = {
-                IconButton(onClick = onBackClick) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back", tint = Color.White)
-                }
-            },
-            colors = TopAppBarDefaults.centerAlignedTopAppBarColors(containerColor = Color.Transparent),
-            modifier = Modifier.padding(top = 40.dp)
-        )
     }
 }
 

@@ -7,10 +7,13 @@ import androidx.lifecycle.viewModelScope
 import com.example.miniproject.data.SearchHistoryRepository
 import com.example.miniproject.reservation.Reservation
 import com.example.miniproject.reservation.ReservationRepository
+import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.launch
 
+@OptIn(FlowPreview::class)
 class SearchBookingByUserViewModel(application: Application) : AndroidViewModel(application) {
     private val historyRepository by lazy { SearchHistoryRepository(application) }
     private val reservationRepository by lazy { ReservationRepository() }
@@ -27,16 +30,19 @@ class SearchBookingByUserViewModel(application: Application) : AndroidViewModel(
     val searchResults = _searchResults.asStateFlow()
 
     init {
-        viewModelScope.launch { 
-             _searchHistory.value = historyRepository.getHistory(historyKey)
+        viewModelScope.launch {
+            _searchHistory.value = historyRepository.getHistory(historyKey)
+
+            searchText
+                .debounce(500)
+                .collect { query ->
+                    performSearch(query)
+                }
         }
     }
 
     fun onSearchTextChange(text: String) {
         _searchText.value = text
-        if (text.isBlank()) {
-            _searchResults.value = null
-        }
     }
 
     fun onClearHistoryItem(item: String) {
@@ -45,9 +51,10 @@ class SearchBookingByUserViewModel(application: Application) : AndroidViewModel(
     }
 
     fun addSearchToHistory(searchTerm: String) {
-        historyRepository.addToHistory(historyKey, searchTerm)
-        _searchHistory.value = historyRepository.getHistory(historyKey)
-        performSearch(searchTerm)
+        if (searchTerm.isNotBlank()) {
+            historyRepository.addToHistory(historyKey, searchTerm)
+            _searchHistory.value = historyRepository.getHistory(historyKey)
+        }
     }
 
     fun clearAllHistory() {
@@ -56,12 +63,12 @@ class SearchBookingByUserViewModel(application: Application) : AndroidViewModel(
     }
 
     private fun performSearch(query: String) {
-        if (query.isBlank()) {
-            _searchResults.value = emptyList()
-            return
-        }
-        Log.d("SearchVM", "Performing search for userID: '$query'")
         viewModelScope.launch {
+            if (query.isBlank()) {
+                _searchResults.value = null // Set to null to hide the list
+                return@launch
+            }
+            Log.d("SearchVM", "Performing search for userID: '$query'")
             val results = reservationRepository.findReservationsByUserId(query)
             Log.d("SearchVM", "Found ${results.size} reservations for query: '$query'")
             _searchResults.value = results
