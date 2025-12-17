@@ -26,7 +26,6 @@ class AuthRepository{
                 displayId = "U-${firebaseUser.uid.take(6).uppercase()}", // Generate a display ID
                 email = email,
                 name = name,
-                role = "user" // Set default role for new users
             )
             // Use the user's UID as the document ID for easy lookup
             usersCollection.document(firebaseUser.uid).set(newUser).await()
